@@ -34,7 +34,7 @@ namespace PetPo
         }
 
         /// <summary>
-        /// Добавить картув рукук
+        /// Добавить картув руку
         /// </summary>
         public void AddCard(string card)
         {
@@ -83,40 +83,39 @@ namespace PetPo
         /// </summary>
         public int CheckDeck()
         {
+            int aceCount = Arm.Count(card => card == "A");
             int result = 0;
-            int t = 0;
+
             foreach (string card in Arm)
             {
                 if (card == "J" || card == "Q" || card == "K")
                 {
                     result += 10;
                 }
-                else
+                else if (card != "A")
                 {
-                    if (card == "A")
-                    {
-                        t++;
-                        continue;
-                    }
                     result += Convert.ToInt32(card);
                 }
             }
-            if (t > 0)
-            {
-                for (int j = 0; j < t; j++)
-                {
-                    if (result + 11 > 21)
-                    {
-                        result += 1;
-                    }
-                    else
-                    {
-                        result += 11;
-                    }
-                }
-                
-            }
+
+            result += CalculateAcesValue(result, aceCount);
             return result;
+        }
+
+        /// <summary>
+        /// Подсчет тузов
+        /// </summary>
+        /// <param name="totalScore">Текущий счет</param>
+        /// <param name="aceCount">Колличество тузов в руке</param>
+        private int CalculateAcesValue(int totalScore, int aceCount) {
+            int score = 0;
+            
+            for (int j = 0; j < aceCount; j++)
+            {
+                score += (totalScore + 11 > 21) ? 1 : 11;
+            }
+
+            return score;
         }
     }
 
